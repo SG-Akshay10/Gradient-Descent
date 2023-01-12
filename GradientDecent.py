@@ -5,7 +5,7 @@
 
 # ### Importing Packages
 
-# In[122]:
+# In[301]:
 
 
 import pandas as pd
@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 
-# In[123]:
+# In[302]:
 
 
 import warnings
@@ -26,7 +26,7 @@ warnings.filterwarnings('ignore')
 
 # ### Importing Dataset
 
-# In[124]:
+# In[303]:
 
 
 # Set the number of data points
@@ -37,7 +37,7 @@ x = np.random.normal(0, 1, num_points)
 y = np.random.normal(0, 1, num_points)
 
 
-# In[125]:
+# In[304]:
 
 
 # Combine the x and y values into a single dataset
@@ -47,14 +47,14 @@ df
 
 # #### Data Anaysis
 
-# In[126]:
+# In[305]:
 
 
 print(f"Number of records : {df.shape[0]}")
 print(f"Number of column : {df.shape[1]}")
 
 
-# In[127]:
+# In[306]:
 
 
 print(f'Maximum X value is : {df.x.max()}')
@@ -63,25 +63,25 @@ print(f'Maximum Y value is : {df.y.max()}')
 print(f'Minimum Y value is : {df.y.min()}')
 
 
-# In[128]:
+# In[307]:
 
 
 df.info()
 
 
-# In[129]:
+# In[308]:
 
 
 df.describe()
 
 
-# In[130]:
+# In[309]:
 
 
 sns.heatmap(df.corr(),annot=True,cmap='cool')
 
 
-# In[131]:
+# In[310]:
 
 
 fig,(ax1,ax2) = plt.subplots(1,2,figsize=(20,5))
@@ -93,7 +93,7 @@ ax1.set_title('Distribution of y Axis')
 
 # ### Train Test Split
 
-# In[132]:
+# In[311]:
 
 
 shuffle = df.sample(frac=1)
@@ -102,14 +102,14 @@ train = shuffle[:train_size]
 test = shuffle[train_size:]
 
 
-# In[133]:
+# In[312]:
 
 
 print(f"Shape of training data: {train.shape}")
 print(f"Shape of test data : {test.shape}")
 
 
-# In[134]:
+# In[313]:
 
 
 x_train = train['x']
@@ -125,7 +125,7 @@ y_test  = train['y']
 
 # ### Simple Linear Model
 
-# In[135]:
+# In[314]:
 
 
 def SimpleRegressionModel(x_train,y_train):
@@ -149,7 +149,7 @@ def SimpleRegressionModel(x_train,y_train):
     return (slope,intercept)
 
 
-# In[136]:
+# In[315]:
 
 
 m,c = SimpleRegressionModel(x_train,y_train)
@@ -157,7 +157,7 @@ print (f'm = {m} \nc = {c}')
 print(f"Equation of Best Fit :\n y = {m} * x + {c}")
 
 
-# In[137]:
+# In[316]:
 
 
 plt.scatter(x_train,y_train,color="red")
@@ -166,7 +166,7 @@ plt.xlabel('X')
 plt.ylabel('Y')
 
 
-# In[138]:
+# In[317]:
 
 
 def prediction(x_train,slope,intercept):
@@ -174,22 +174,23 @@ def prediction(x_train,slope,intercept):
     return predict
 
 
-# In[139]:
+# In[318]:
 
 
 y_pred = prediction(x_test,m,c)
 
 
-# In[140]:
+# In[319]:
 
 
 from sklearn.metrics import mean_squared_error
-print(mean_squared_error(y_pred,y_test))
+slr = mean_squared_error(y_pred,y_test)
+print(slr)
 
 
 # ## Gradient Descent
 
-# In[141]:
+# In[320]:
 
 
 class GradientDescent:
@@ -211,7 +212,7 @@ class GradientDescent:
         return y
 
 
-# In[142]:
+# In[321]:
 
 
 lr =GradientDescent()
@@ -219,7 +220,7 @@ lr.fit(x,y)
 y_pred=lr.predict(x)
 
 
-# In[143]:
+# In[322]:
 
 
 plt.scatter(x,y,c='black')
@@ -228,42 +229,69 @@ plt.plot(x,y_pred)
 
 # ### Mean Absolute Error and Mean Absolute Percentage Error
 
-# In[144]:
+# In[323]:
 
 
 from sklearn.metrics import mean_squared_error
-print(mean_squared_error(y_pred,y))
+gb = mean_squared_error(y_pred,y)
+print(gb)
 
 
 # ## SK Learn Model
 
-# In[145]:
+# In[324]:
 
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)
 
 
-# In[146]:
+# In[325]:
 
 
 reg = LinearRegression()
 
 
-# In[147]:
+# In[326]:
 
 
 reg.fit(x_train.reshape(-1, 1), y_train)
 
 
-# In[148]:
+# In[327]:
 
 
 y_pred = reg.predict(x_test.reshape(-1, 1))
 
 
-# In[149]:
+# In[328]:
+
+
+print("Slope: ", reg.coef_)
+print("Intercept: ", reg.intercept_)
+
+
+# In[329]:
+
+
+print(f"Equation of Best Fit :\n y = {m} * x + {c}")
+
+
+# In[330]:
 
 
 from sklearn.metrics import mean_squared_error
-print(mean_squared_error(y_pred,y_test))
+sk = mean_squared_error(y_pred,y_test)
+print(sk)
 
+
+# ### Model Evaluation 
+
+# In[331]:
+
+
+m_per_dict = {'Simple Linear regression model':slr,"Gradient Descent Model":gb,"sk-learn model":sk}
+model_performance = pd.DataFrame(m_per_dict,index=['mean_squared_error'])
+model_performance
+
+
+# #### From this output we can say that our model is works the best for sk-learn model and the least worst for gradient decent model
