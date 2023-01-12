@@ -5,16 +5,18 @@
 
 # ### Importing Packages
 
-# In[855]:
+# In[122]:
 
 
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
-# In[856]:
+# In[123]:
 
 
 import warnings
@@ -24,7 +26,7 @@ warnings.filterwarnings('ignore')
 
 # ### Importing Dataset
 
-# In[857]:
+# In[124]:
 
 
 # Set the number of data points
@@ -35,7 +37,7 @@ x = np.random.normal(0, 1, num_points)
 y = np.random.normal(0, 1, num_points)
 
 
-# In[858]:
+# In[125]:
 
 
 # Combine the x and y values into a single dataset
@@ -45,14 +47,14 @@ df
 
 # #### Data Anaysis
 
-# In[859]:
+# In[126]:
 
 
 print(f"Number of records : {df.shape[0]}")
 print(f"Number of column : {df.shape[1]}")
 
 
-# In[860]:
+# In[127]:
 
 
 print(f'Maximum X value is : {df.x.max()}')
@@ -61,25 +63,25 @@ print(f'Maximum Y value is : {df.y.max()}')
 print(f'Minimum Y value is : {df.y.min()}')
 
 
-# In[861]:
+# In[128]:
 
 
 df.info()
 
 
-# In[862]:
+# In[129]:
 
 
 df.describe()
 
 
-# In[863]:
+# In[130]:
 
 
 sns.heatmap(df.corr(),annot=True,cmap='cool')
 
 
-# In[864]:
+# In[131]:
 
 
 fig,(ax1,ax2) = plt.subplots(1,2,figsize=(20,5))
@@ -91,7 +93,7 @@ ax1.set_title('Distribution of y Axis')
 
 # ### Train Test Split
 
-# In[865]:
+# In[132]:
 
 
 shuffle = df.sample(frac=1)
@@ -100,14 +102,14 @@ train = shuffle[:train_size]
 test = shuffle[train_size:]
 
 
-# In[866]:
+# In[133]:
 
 
 print(f"Shape of training data: {train.shape}")
 print(f"Shape of test data : {test.shape}")
 
 
-# In[867]:
+# In[134]:
 
 
 x_train = train['x']
@@ -123,7 +125,7 @@ y_test  = train['y']
 
 # ### Simple Linear Model
 
-# In[868]:
+# In[135]:
 
 
 def SimpleRegressionModel(x_train,y_train):
@@ -147,7 +149,7 @@ def SimpleRegressionModel(x_train,y_train):
     return (slope,intercept)
 
 
-# In[869]:
+# In[136]:
 
 
 m,c = SimpleRegressionModel(x_train,y_train)
@@ -155,7 +157,7 @@ print (f'm = {m} \nc = {c}')
 print(f"Equation of Best Fit :\n y = {m} * x + {c}")
 
 
-# In[870]:
+# In[137]:
 
 
 plt.scatter(x_train,y_train,color="red")
@@ -164,7 +166,7 @@ plt.xlabel('X')
 plt.ylabel('Y')
 
 
-# In[872]:
+# In[138]:
 
 
 def prediction(x_train,slope,intercept):
@@ -172,13 +174,13 @@ def prediction(x_train,slope,intercept):
     return predict
 
 
-# In[873]:
+# In[139]:
 
 
 y_pred = prediction(x_test,m,c)
 
 
-# In[874]:
+# In[140]:
 
 
 from sklearn.metrics import mean_squared_error
@@ -187,7 +189,7 @@ print(mean_squared_error(y_pred,y_test))
 
 # ## Gradient Descent
 
-# In[875]:
+# In[141]:
 
 
 class GradientDescent:
@@ -209,7 +211,7 @@ class GradientDescent:
         return y
 
 
-# In[876]:
+# In[142]:
 
 
 lr =GradientDescent()
@@ -217,7 +219,7 @@ lr.fit(x,y)
 y_pred=lr.predict(x)
 
 
-# In[877]:
+# In[143]:
 
 
 plt.scatter(x,y,c='black')
@@ -226,9 +228,42 @@ plt.plot(x,y_pred)
 
 # ### Mean Absolute Error and Mean Absolute Percentage Error
 
-# In[878]:
+# In[144]:
 
 
 from sklearn.metrics import mean_squared_error
 print(mean_squared_error(y_pred,y))
+
+
+# ## SK Learn Model
+
+# In[145]:
+
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)
+
+
+# In[146]:
+
+
+reg = LinearRegression()
+
+
+# In[147]:
+
+
+reg.fit(x_train.reshape(-1, 1), y_train)
+
+
+# In[148]:
+
+
+y_pred = reg.predict(x_test.reshape(-1, 1))
+
+
+# In[149]:
+
+
+from sklearn.metrics import mean_squared_error
+print(mean_squared_error(y_pred,y_test))
 
