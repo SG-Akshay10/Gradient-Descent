@@ -20,6 +20,6 @@ The cost function is defined as the measurement of difference or error between a
 
 # Ouput
 
-![image](https://user-images.githubusercontent.com/83088512/212019229-e617a5e1-df15-4511-8874-ace90c8cb3ca.png)
+![image](https://user-images.githubusercontent.com/83088512/212020242-b7b46f0f-2c51-40bb-a949-ae53b58515de.png)
 
 From this output we can say that our model is works the best for sk-learn model and the least worst for gradient decent model
